@@ -9,14 +9,18 @@ class MyController extends CI_Controller {
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('DataModal', 'm1');
+		$this->load->library('session');
+		
 		$this->load->helper('url');
 	}
+
 
 
 	public function index()
 	{
 		$data['StateData'] = $this->m1->fetchAll_data('tbl_state');
-		$data['CityData'] =  $this->m1->fetchAll_data('tbl_city');
+		//$data['CityData'] =  $this->m1->fetchAll_data('tbl_city');
+		$data['CityData'] =  $this->m1->fetchJoin('tbl_city','tbl_state','tbl_state.nm_sid=tbl_city.nm_sid');
 		$this->load->view('ViewData', $data);
 	}
 
@@ -26,8 +30,18 @@ class MyController extends CI_Controller {
 		$data = array(
 			'sz_sname' => $sname,
 		);
-		$this->m1->Insert_data('tbl_state', $data);
-		redirect('MyController', 'refresh');
+		$res=$this->m1->Insert_data('tbl_state', $data);
+		if($res!=null)
+		{
+    		$this->session->set_flashdata('Successfully','Data Successfully Inserted'); 
+		}else{
+			$this->session->set_flashdata('Failed','Failed To 
+			inserted Data');
+		}
+		//$this->index();
+		
+		redirect('MyController','refresh');
+		
 	}
 
 	public function UpdateState()
@@ -39,21 +53,24 @@ class MyController extends CI_Controller {
 			'sz_sname' => $sname,
 		);
 		$this->m1->Update_data('tbl_state',$data,$sid,'nm_sid');
-		redirect('MyController', 'refresh');
+		//$this->index();
+		redirect('MyController','refresh');
 	}
 
 	public function DeleteState()
 	{
 		$sid=$this->uri->segment('3');
 		$this->m1->Delete_data('tbl_state', $sid,'nm_sid');
-		redirect('MyController', 'refresh');
+		//$this->index();
+		redirect('MyController','refresh');
 	}
 
 	public function DeleteCity()
 	{
 		$cid=$this->uri->segment('3');
 		$this->m1->Delete_data('tbl_city', $cid,'nm_cid');
-		redirect('MyController', 'refresh');
+		//$this->index();
+		redirect('MyController','refresh');
 	}
 
 	public function InsertCity()
@@ -66,7 +83,8 @@ class MyController extends CI_Controller {
 		);
 		
 		$this->m1->Insert_data('tbl_city', $data);
-		redirect('MyController', 'refresh');
+		//$this->index();
+		redirect('MyController','refresh');
 	}
 
 	public function UpdateCity()
@@ -80,17 +98,13 @@ class MyController extends CI_Controller {
 		);
 		
 		$this->m1->Update_data('tbl_city',$data,$cid,'nm_cid');
-		redirect('MyController', 'refresh');
+		//$this->index();
+		redirect('MyController','refresh');
 	}
-
-
 	
 	function fetch_city()
-	{
-		
-		
-			echo $this->m1->fetchByID('tbl_city',$this->input->post('state_id'),'nm_sid');
-		
+	{	
+		echo $this->m1->fetchByID('tbl_city',$this->input->post('state_id'),'nm_sid');	
 	}
 }
 ?>
