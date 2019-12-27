@@ -102,9 +102,16 @@ class MyController extends CI_Controller {
 		redirect('MyController','refresh');
 	}
 	
-	function fetch_city()
+	public function fetch_city()
 	{	
 		echo $this->m1->fetchByID('tbl_city',$this->input->post('state_id'),'nm_sid');	
+	}
+
+	public function checkData()
+	{
+		$statename= $this->input->post('statename');
+		$result = $this->m1->getNumRows('tbl_state',$statename,'sz_sname');
+		echo $result;
 	}
 }
 ?>

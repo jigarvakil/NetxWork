@@ -62,6 +62,15 @@ class DataModal extends CI_model {
         return $result;
         
     }
+
+    function getNumRows($tblname,$data,$idfield){
+        $this->db->where($idfield, $data);
+        $query = $this->db->get( $tblname );
+        return $query->num_rows();
+        
+        
+        
+    }
     
 }
 ?>

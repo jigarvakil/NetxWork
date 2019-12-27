@@ -13,13 +13,20 @@
    <title>State City Area</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
- </head>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+ </head>
+
+
  </head>
 
  <body>
@@ -141,7 +148,7 @@
 
 
    <!-- The State Insert Modal -->
-   <div class="modal" id="StateInsertModal">
+   <div class="modal fade" id="StateInsertModal">
      <div class="modal-dialog">
        <div class="modal-content">
 
@@ -169,7 +176,7 @@
                <div class="col-md-3">
                </div>
                <div class="col-md-6 text-right">
-                 <input type="submit" class="btn btn-success" name="BtnS">
+                 <input type="submit" class="btn btn-success" id="BtnS" name="BtnS">
                </div>
 
              </div>
@@ -186,7 +193,7 @@
    </div>
 
    <!-- The City Insert Modal -->
-   <div class="modal" id="CityInsertModal">
+   <div class="modal fade" role="dialog" id="CityInsertModal">
      <div class="modal-dialog">
        <div class="modal-content">
 
@@ -253,7 +260,7 @@
 
 
    <!-- The State Update Modal -->
-   <div class="modal" id="StateUpdateModal">
+   <div class="modal " id="StateUpdateModal">
      <div class="modal-dialog">
        <div class="modal-content">
 
@@ -401,6 +408,33 @@
            },
            success: function(data) {
              $('#cmbCity').html(data);
+           }
+         });
+       } else {
+         $('#cmbCity').html('<option value="">Select City</option>');
+       }
+     });
+
+     $('#txtStateName').keyup(function(){
+        var statename= $.trim($(this).val());
+        if (statename != '') {
+         $.ajax({
+           url: "<?php echo base_url(); ?>index.php/MyController/checkData",
+           method: "POST",
+           data: {
+              statename : statename
+           },
+           success: function(data) {
+             //$('#cmbCity').html(data);
+             //console.log(data);
+             if(data>0)
+             {
+               swal("Mind your data!"," data already inserted","error");
+                $('#BtnS').prop('disabled', true);
+             }
+             else{
+                $('#BtnS').prop('disabled', false);
+             }
            }
          });
        } else {
